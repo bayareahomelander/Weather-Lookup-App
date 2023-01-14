@@ -1,0 +1,51 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Weather Lookup</title>
+</head>
+<body>
+    <nav class="navbar">
+        <form class="search-container">
+            <input type="text" placeholder="Enter a Location" id="search-bar">
+            <button type="button" id="search-button" onclick="search()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+    </nav>
+
+    <div id="main-container">
+        <div id="city"></div>
+        <div id="temperature"></div>
+        <div id="weather-description"></div>
+    </div>
+
+    <div id="weather-container">
+        <div id="windspeed"></div>
+        <div id="humidity"></div>
+        <div id="sunrise"></div>
+        <div id="timestamp"></div>
+    </div>
+
+    <div id="user-container">
+        <div id="user-city"></div>
+        <div id="user-temperature"></div>
+        <div id="user-weather-description"></div>
+    </div>
+
+    <div id="user-weather">
+        <div id="user-windspeed"></div>
+        <div id="user-humidity"></div>
+        <div id="user-sunrise"></div>
+        <div id="user-timestamp"></div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlbFMcF2m74ok8chkm0YQl2e4cg1ZW5s4&libraries=places"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

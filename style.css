@@ -1,0 +1,148 @@
+body{
+    background: url('https://raw.githubusercontent.com/bayareahomelander/Weather-Lookup-App/main/img/wallpaper.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    font-family: 'Ubuntu', system-ui;
+}
+
+.navbar{
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    background: #c2cccf;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    height: 60px;
+    box-shadow: 0 5px 5px #000;
+    transition: all 0.3s ease;
+}
+
+.search-container{
+    margin-right: 5px;
+    margin-top: 15px;
+    float: right;
+}
+
+#search-bar{
+    position: relative;
+    height: 30px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    width: 200px;
+}
+
+#search-button{
+    font-weight: 900;
+    font-size: 15px;
+    outline: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.pac-container{
+    z-index: 99999;
+}
+
+#main-container, #user-container{
+    color: #e9e5df;
+    max-width: fit-content;
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 200px;
+    align-items: center;
+}
+
+#city, #user-city{
+    font-weight: 200;
+    font-size: 30px;
+}
+
+#temperature, #user-temperature{
+    font-weight: 300;
+    font-size: 70px;
+}
+
+#weather-description, #user-weather-description{
+    font-weight: 200;
+    font-size: 20px;
+}
+
+@keyframes slideIn{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#weather-container, #user-weather{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#weather-container > div, #user-weather > div{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background-color: rgba(170, 204, 199, 0.8);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    margin: 5px;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#weather-container > div i, #user-weather > div i{
+    margin-bottom: -50px;
+}
+
+#weather-container, #main-container, #user-container, #user-weather{
+    animation: slideIn 1s ease-in-out forwards;
+}
+
+#user-container, #user-weather{
+    display: none;
+}
+
+@media (prefers-color-scheme: dark){
+    body{
+        background-image: url('https://raw.githubusercontent.com/bayareahomelander/Weather-Lookup-App/main/img/wallpaperDark.jpg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .navbar, .navbar.sticky{
+        background: #1c1c1e;
+    }
+
+    #search-bar{
+        border: 1px solid #e9e5df;
+        background-color: #1c1c1e;
+        color: #e9e5df;
+    }
+
+    #search-button{
+        color: #e9e5df;
+    }
+
+    #weather-container > div, #user-weather > div{
+        background-color: rgba(28, 28, 30, 0.8);
+        color: #e9e5df;
+    }
+}
