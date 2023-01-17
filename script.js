@@ -20,12 +20,6 @@ function getLatLng(cityName, storageType = 'localStorage'){
     });
 }
 
-// This function retrieves coordinates from local storage and uses them to call the OWM API
-function getWeather(storageType){
-    var latitude = localStorage.getItem("latitude");
-    var longitude = localStorage.getItem("longitude");
-    var url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
-}
 
 // This function fetches both Google and OWM API for weather and local time data
 function search(){
@@ -37,7 +31,6 @@ function search(){
     setTimeout(function(){
         var latitude = localStorage.getItem("latitude");
         var longitude = localStorage.getItem("longitude");
-        getWeather(storageType);
 
         const timestamp = Math.round((new Date()).getTime() / 1000);
         const timeUrl = `https://maps.googleapis.com/maps/api/timezone/json?location=${latitude},${longitude}&timestamp=${timestamp}&key=${googleAPI}`;
@@ -46,21 +39,23 @@ function search(){
         fetch(timeUrl)
         .then(response => response.json())
         .then(data => {
+            // Timezone ID -> e.g. 'America/Vancouver'
+            // Save it in local storage for later use
+            const timezoneID = data.timeZoneId;
+            localStorage.setItem('time_zone', timezoneID)
+
             // Get the time offset from the API response
-            const offset = data.rawOffset + data.dstOffset;
+            const offset = data.rawOffset * 1000 + data.dstOffset * 1000;
 
             // Calculate local time
-            const localTime = new Date(timestamp * 1000 + offset * 1000);
+            const localTime = new Date(timestamp * 1000 + offset);
             const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
 
             // Extract the weekday, month, day, current time and timezone information
             // Example final format: Fri Jan 14 12:11 PST
             const weekday = weekdays[localTime.getDay()];
             const date = monthNames[localTime.getMonth()] + ' ' + localTime.getDate();
-            const currentTime = localTime.getHours() + ':' + localTime.getMinutes();
-            const timezone = localTime.toString().match(/\(([^)]+)\)/)[1].split(' ').map(word => word[0]).join('');
 
             // Add the above data to HTML
             $('#user-timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + date)
@@ -79,7 +74,19 @@ function search(){
             windspeed = Math.round(windspeed);
 
             var humidity = data.main.humidity;
-            var sunrise = new Date(data.sys.sunrise*1000);
+
+            const option = {
+                timeZone: localStorage.getItem('time_zone'),
+                hour12: false,
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric'
+            };
+
+            var sunrise = new Date(data.sys.sunrise*1000).toLocaleString('en-US', option).split(',')[1];
+            var sunset = new Date(data.sys.sunset*1000).toLocaleString('en-US', option).split(',')[1];
 
             var icon = data.weather[0].icon;
             var iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`
@@ -94,8 +101,16 @@ function search(){
             $('#user-weather-description').text(capitalized);
             $('#user-windspeed').html('<i class="fa-solid fa-wind"></i>' + 'Windspeed: ' + windspeed + ' km/h');
             $('#user-humidity').html('<i class="fa-solid fa-droplet"></i>' + 'Humidity: ' + humidity + '%');
-            $('#user-sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
 
+            // Check current local time -> display either sunrise/sunset time on page
+            var currentTime = new Date();
+            cuurentTime = currentTime.toLocaleString('en-US', option).split(',')[1];
+
+            if (currentTime > sunrise) {
+                $('#user-sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset);
+            } else {
+                $('#user-sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise);
+            }
 
             // Create weather icon and clears the user-container div if there
             // already exists one -> prevents icons from piling up
@@ -166,16 +181,16 @@ if (navigator.geolocation){
         lat = position.coords.latitude;
         lon = position.coords.longitude;
 
-        // Get city name using Google Maps Geocoding API
+        // Convert coordinates to city name using Google Maps Geocoding API
+        // and store it in local storage
         const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${googleAPI}`;
-
-        // Send request to API
         fetch(url)
         .then(response => response.json())
         .then(data => {
             const city = data.results[0].address_components.find(component => component.types.includes("locality")).long_name;
             localStorage.setItem('city', city)
         })
+
 
         // Use lat and lon to make call to OpenWeatherMap API
         var apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
@@ -192,7 +207,8 @@ if (navigator.geolocation){
             windspeed = Math.round(windspeed);
 
             var humidity = data.main.humidity;
-            var sunrise = new Date(data.sys.sunrise*1000);
+            var sunrise = new Date(data.sys.sunrise * 1000);
+            var sunset = new Date(data.sys.sunset * 1000);
             var icon = data.weather[0].icon;
             var iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`
 
@@ -202,7 +218,16 @@ if (navigator.geolocation){
             $('#weather-description').text(capitalized);
             $('#windspeed').html('<i class="fa-solid fa-wind"></i>' + 'Windspeed: ' + windspeed + ' km/h');
             $('#humidity').html('<i class="fa-solid fa-droplet"></i>' + 'Humidity: ' + humidity + '%');
-            $('#sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+
+            // Check current local time -> display either sunrise/sunset time.
+            setInterval(() => {
+                var currentTime = new Date();
+                if (currentTime.getHours() < sunset.getHours()) {
+                    $('#sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
+                } else {
+                    $('#sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
+                }
+            });
             
             // Append weather icon
             let weatherIcon = document.createElement('img');
@@ -232,8 +257,6 @@ if (navigator.geolocation){
             // Example final format: Fri Jan 14 12:11 Pacific Standard Time
             const weekday = weekdays[localTime.getDay()];
             const date = monthNames[localTime.getMonth()] + ' ' + localTime.getDate();
-            const currentTime = localTime.getHours() + ':' + localTime.getMinutes();
-            const timezone = localTime.toString().match(/\(([^)]+)\)/)[1].split(' ').map(word => word[0]).join('');
 
             // Add the above data to HTML
             $('#timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + date)
@@ -255,4 +278,16 @@ if (navigator.geolocation){
           alert("An unknown error occurred.");
           break;
     }
+}
+
+
+// Activate the side menu when the icon is clicked
+const menuIcon = document.querySelector('#menu-icon');
+const sideMenu = document.querySelector('#side-menu');
+menuIcon.addEventListener('click', function() {
+    sideMenu.classList.toggle('show');
+});
+
+function toggleIcon(x) {
+    x.classList.toggle("change");
 }
