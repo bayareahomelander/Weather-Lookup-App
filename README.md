@@ -1,4 +1,4 @@
-# Weather-Lookup-App (Started: 2023-01-05)
+# Weather-Lookup-App
 
 This weather lookup project is built using JavaScript, HTML + CSS and JS libraries (jQuery, React). The web page is designed to display a series of information using the OpenWeatherMap API and Google Maps API: 
 
