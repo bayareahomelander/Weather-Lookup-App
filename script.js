@@ -1,5 +1,6 @@
 const apiKey = 'bd9c4de0f528c929b27558a64f256edb';
 const googleAPI = 'AIzaSyDlbFMcF2m74ok8chkm0YQl2e4cg1ZW5s4';
+const cityMenu = document.getElementById('side-menu');
 
 // Create a function that converts city names to latitude and longitude using Google Maps API
 // and stores coordinates in local storage
@@ -58,7 +59,7 @@ function search(){
             const date = monthNames[localTime.getMonth()] + ' ' + localTime.getDate();
 
             // Add the above data to HTML
-            $('#user-timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + date)
+            $('#timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + date)
         });
 
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`)
@@ -96,20 +97,20 @@ function search(){
             cityName = cityName.split(',').shift();
 
             // Update HTML elements accordingly
-            $('#user-city').text(cityName);
-            $('#user-temperature').text(temperature + '°C');
-            $('#user-weather-description').text(capitalized);
-            $('#user-windspeed').html('<i class="fa-solid fa-wind"></i>' + 'Windspeed: ' + windspeed + ' km/h');
-            $('#user-humidity').html('<i class="fa-solid fa-droplet"></i>' + 'Humidity: ' + humidity + '%');
+            $('#city').text(cityName);
+            $('#temperature').text(temperature + '°C');
+            $('#weather-description').text(capitalized);
+            $('#windspeed').html('<i class="fa-solid fa-wind"></i>' + 'Windspeed: ' + windspeed + ' km/h');
+            $('#humidity').html('<i class="fa-solid fa-droplet"></i>' + 'Humidity: ' + humidity + '%');
 
             // Check current local time -> display either sunrise/sunset time on page
             var currentTime = new Date();
-            cuurentTime = currentTime.toLocaleString('en-US', option).split(',')[1];
+            curentTime = currentTime.toLocaleString('en-US', option).split(',')[1];
 
             if (currentTime > sunrise) {
-                $('#user-sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset);
+                $('#sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset);
             } else {
-                $('#user-sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise);
+                $('#sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise);
             }
 
             // Create weather icon and clears the user-container div if there
@@ -124,15 +125,10 @@ function search(){
                 previousIcon.remove()
             }
     
-            document.getElementById('user-container').appendChild(weatherIcon);
+            document.getElementById('main-container').appendChild(weatherIcon);
         })
 
     }, 500);
-
-    // Display values are set to 'none' by default
-    // and only show up when a search request has been made
-    document.getElementById("user-container").style.display = "flex";
-    document.getElementById("user-weather").style.display = "flex";
 }
 
 // Add an event-listener for the search button
@@ -191,7 +187,6 @@ if (navigator.geolocation){
             localStorage.setItem('city', city)
         })
 
-
         // Use lat and lon to make call to OpenWeatherMap API
         var apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
         $.getJSON(apiUrl, function(data){
@@ -220,18 +215,17 @@ if (navigator.geolocation){
             $('#humidity').html('<i class="fa-solid fa-droplet"></i>' + 'Humidity: ' + humidity + '%');
 
             // Check current local time -> display either sunrise/sunset time.
-            setInterval(() => {
-                var currentTime = new Date();
-                if (currentTime.getHours() < sunset.getHours()) {
-                    $('#sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
-                } else {
-                    $('#sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
-                }
-            });
+            var currentTime = new Date();
+            if (currentTime.getHours() < sunset.getHours()) {
+                $('#sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
+            } else {
+                $('#sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
+            }
             
             // Append weather icon
             let weatherIcon = document.createElement('img');
             weatherIcon.src = iconUrl;
+            weatherIcon.id = 'weather-icon';
             document.getElementById('main-container').appendChild(weatherIcon);
         })
 
@@ -251,7 +245,6 @@ if (navigator.geolocation){
             const localTime = new Date(timestamp * 1000 + offset * 1000);
             const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
 
             // Extract the weekday, month, day, current time and timezone information
             // Example final format: Fri Jan 14 12:11 Pacific Standard Time

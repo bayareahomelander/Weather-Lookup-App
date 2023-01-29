@@ -61,6 +61,19 @@ body{
     transition: 0.5s;
 }
 
+.side-menu ul{
+    margin-top: 100px;
+}
+
+.side-menu li{
+    cursor: pointer;
+    font-size: 15px;
+    margin: 10px;
+    width: 80%;
+    border-bottom: 1px solid #000;
+    list-style-type: none;
+}
+
 .show{
     transition: 0.5s;
     left: 0;
@@ -98,7 +111,7 @@ body{
     z-index: 99999;
 }
 
-#main-container, #user-container{
+#main-container{
     color: #e9e5df;
     max-width: fit-content;
     position: relative;
@@ -110,28 +123,28 @@ body{
     align-items: center;
 }
 
-#city, #user-city{
+#city{
     font-weight: 200;
     font-size: 30px;
 }
 
-#temperature, #user-temperature{
+#temperature{
     font-weight: 300;
     font-size: 70px;
 }
 
-#weather-description, #user-weather-description{
+#weather-description{
     font-weight: 200;
     font-size: 20px;
 }
 
-#weather-container, #user-weather{
+#weather-container{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-#weather-container > div, #user-weather > div{
+#weather-container > div{
     position: relative;
     width: 150px;
     height: 150px;
@@ -145,11 +158,11 @@ body{
     padding: 5px;
 }
 
-#weather-container > div i, #user-weather > div i{
+#weather-container > div i{
     margin-bottom: -50px;
 }
 
-#weather-container, #main-container, #user-container, #user-weather{
+#weather-container, #main-container{
     animation: fadeIn 1s ease-in-out forwards;
 }
 
@@ -161,7 +174,7 @@ body{
     }
 }
 
-#user-container, #user-weather{
+#user-container{
     display: none;
 }
 
@@ -187,12 +200,17 @@ body{
         color: #e9e5df;
     }
 
-    #weather-container > div, #user-weather > div{
+    #weather-container > div{
         background-color: rgba(28, 28, 30, 0.8);
         color: #e9e5df;
     }
 
     .bar1, .bar2, .bar3{
         background-color: #e9e5df;
+    }
+
+    .side-menu li{
+        color: #e9e5df;
+        border-bottom: 1px solid #e9e5df;
     }
 }
