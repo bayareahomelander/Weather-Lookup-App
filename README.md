@@ -8,7 +8,7 @@ This weather lookup project is built using JavaScript, HTML + CSS and JS librari
 - Icon
 - Wind speed
 - Humidity
-- Sunrise/Sunset time ****(Update 2023-01-16: Reconstructed code, now the Sunrise section automatically switches between sunrise/sunset based on selected city's current local time; fixed the bug where it only shows city time in PST, even not in the West Coast.)****
+- Sunrise/Sunset time 
 - Current date
 
 The webpage has separate sections, in which the first section asks for location permission and automatically displays the above information. User is also able to perform searching using the search bar at the top right hand corner, which autocompletes user input for city names using Google Maps Places API.
@@ -19,3 +19,7 @@ Features to add:
 - Feels-like temperature
 - Side menu to store cities currently present on the page
 - (...)
+
+
+****(Update 2023-01-28: Reconsturcted HTML and JS, current city displayed on the page will now be replaced instead of adding a new section underneath.)****
+****(Update 2023-01-16: Reconstructed code, now the Sunrise section automatically switches between sunrise/sunset based on selected city's current local time; fixed the bug where it only shows city time in PST, even not in the West Coast.)****
