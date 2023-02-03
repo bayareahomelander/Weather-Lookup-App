@@ -22,4 +22,5 @@ Features to add:
 
 
 ****(Update 2023-01-28: Reconsturcted HTML and JS, current city displayed on the page will now be replaced instead of adding a new section underneath.)****
+
 ****(Update 2023-01-16: Reconstructed code, now the Sunrise section automatically switches between sunrise/sunset based on selected city's current local time; fixed the bug where it only shows city time in PST, even not in the West Coast.)****
