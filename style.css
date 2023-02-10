@@ -138,10 +138,12 @@ body{
     font-size: 20px;
 }
 
-#weather-container{
+#weather-container, #second-container{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    flex-direction: row;
+    position: relative;
 }
 
 #weather-container > div{
@@ -158,24 +160,34 @@ body{
     padding: 5px;
 }
 
+#second-container > div{
+    position: relative;
+    background-color: rgba(170, 204, 199, 0.8);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    margin: 5px;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#uvindex{
+    width: 318px;
+    height: 150px;
+}
+
+#feelsLike, #rain{
+    width: 150px;
+    height: 150px;
+}
+
 #weather-container > div i{
     margin-bottom: -50px;
 }
 
 #weather-container, #main-container{
     animation: fadeIn 1s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    } to {
-        opacity: 1;
-    }
-}
-
-#user-container{
-    display: none;
 }
 
 @media (prefers-color-scheme: dark){
@@ -200,7 +212,7 @@ body{
         color: #e9e5df;
     }
 
-    #weather-container > div{
+    #weather-container > div, #second-container > div{
         background-color: rgba(28, 28, 30, 0.8);
         color: #e9e5df;
     }

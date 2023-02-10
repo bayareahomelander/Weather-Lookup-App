@@ -1,8 +1,8 @@
-const apiKey = 'bd9c4de0f528c929b27558a64f256edb';
+const apiKey = '99264ea2ba41e46e160feac2a2889f84';
 const googleAPI = 'AIzaSyDlbFMcF2m74ok8chkm0YQl2e4cg1ZW5s4';
 const cityMenu = document.getElementById('side-menu');
 
-// Create a function that converts city names to latitude and longitude using Google Maps API
+// This function converts city names to latitude and longitude using Google Maps API
 // and stores coordinates in local storage
 function getLatLng(cityName, storageType = 'localStorage'){
     var geocoder = new google.maps.Geocoder();
@@ -36,45 +36,38 @@ function search(){
         const timestamp = Math.round((new Date()).getTime() / 1000);
         const timeUrl = `https://maps.googleapis.com/maps/api/timezone/json?location=${latitude},${longitude}&timestamp=${timestamp}&key=${googleAPI}`;
 
-        // Make Goole Maps Timezone API request
         fetch(timeUrl)
         .then(response => response.json())
         .then(data => {
-            // Timezone ID -> e.g. 'America/Vancouver'
-            // Save it in local storage for later use
-            const timezoneID = data.timeZoneId;
-            localStorage.setItem('time_zone', timezoneID)
+            var timezoneId = data.timeZoneId;
+            var date = new Date();
 
-            // Get the time offset from the API response
-            const offset = data.rawOffset * 1000 + data.dstOffset * 1000;
+            // Extract the weekday, month, and day
+            // Example final format: Fri Jan 14
+            var weekdayOptions = {timeZone: timezoneId, weekday: 'short'};
+            var weekday = new Intl.DateTimeFormat('en-US', weekdayOptions).format(date);
 
-            // Calculate local time
-            const localTime = new Date(timestamp * 1000 + offset);
-            const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var monthOptions = {timeZone: timezoneId, month: 'short'};
+            var month = new Intl.DateTimeFormat('en-US', monthOptions).format(date);
 
-            // Extract the weekday, month, day, current time and timezone information
-            // Example final format: Fri Jan 14 12:11 PST
-            const weekday = weekdays[localTime.getDay()];
-            const date = monthNames[localTime.getMonth()] + ' ' + localTime.getDate();
+            var dayOptions = {timeZone: timezoneId, day: '2-digit'};
+            var day = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
 
-            // Add the above data to HTML
-            $('#timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + date)
+            // Add above data to HTML
+            $('#timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + month + ' ' + day);
         });
 
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`)
-        .then(response => response.json())
-        .then(data => {
-            var temperature = data.main.temp - 273.15;
+        $.getJSON(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&appid=${apiKey}`, function(data){
+            var temperature = data.current.temp - 273.15;
             temperature = Math.round(temperature);
 
-            var description = data.weather[0].description;
+            var description = data.current.weather[0].description;
             let capitalized = description.split(" ").map( word => word.slice(0,1).toUpperCase() + word.substr(1) ).join(" ");
 
-            var windspeed = data.wind.speed;
+            var windspeed = data.current.wind_speed;
             windspeed = Math.round(windspeed);
 
-            var humidity = data.main.humidity;
+            var humidity = data.current.humidity;
 
             const option = {
                 timeZone: localStorage.getItem('time_zone'),
@@ -86,10 +79,10 @@ function search(){
                 minute: 'numeric'
             };
 
-            var sunrise = new Date(data.sys.sunrise*1000).toLocaleString('en-US', option).split(',')[1];
-            var sunset = new Date(data.sys.sunset*1000).toLocaleString('en-US', option).split(',')[1];
+            var sunrise = new Date(data.daily[0].sunrise*1000).toLocaleString('en-US', option).split(',')[1];
+            var sunset = new Date(data.daily[0].sunset*1000).toLocaleString('en-US', option).split(',')[1];
 
-            var icon = data.weather[0].icon;
+            var icon = data.current.weather[0].icon;
             var iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`
 
             // Get search bar input and keep cityname only
@@ -105,9 +98,9 @@ function search(){
 
             // Check current local time -> display either sunrise/sunset time on page
             var currentTime = new Date();
-            curentTime = currentTime.toLocaleString('en-US', option).split(',')[1];
+            currentTime = currentTime.toLocaleString('en-US', option).split(',')[1];
 
-            if (currentTime > sunrise) {
+            if (currentTime >= sunrise && currentTime < sunset) {
                 $('#sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset);
             } else {
                 $('#sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise);
@@ -188,24 +181,31 @@ if (navigator.geolocation){
         })
 
         // Use lat and lon to make call to OpenWeatherMap API
-        var apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-        $.getJSON(apiUrl, function(data){
+        var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+        $.getJSON(apiUrl, function(data) {
             // Get desired weather values
             const storedCity = localStorage.getItem('city');
-            var temperature = data.main.temp - 273.15;
+            var temperature = data.current.temp - 273.15;
             temperature = Math.round(temperature);
 
-            var description = data.weather[0].description;
+            var description = data.current.weather[0].description;
             let capitalized = description.split(" ").map( word => word.slice(0,1).toUpperCase() + word.substr(1) ).join(" ");
 
-            var windspeed = data.wind.speed;
+            var windspeed = data.current.wind_speed;
             windspeed = Math.round(windspeed);
 
-            var humidity = data.main.humidity;
-            var sunrise = new Date(data.sys.sunrise * 1000);
-            var sunset = new Date(data.sys.sunset * 1000);
-            var icon = data.weather[0].icon;
-            var iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`
+            var humidity = data.current.humidity;
+            var sunrise = new Date(data.daily[0].sunrise * 1000);
+            var sunset = new Date(data.daily[0].sunset * 1000);
+            var uvindex = data.current.uvi;
+
+            var feeslike = data.current.feels_like - 273.15;
+            feeslike = Math.round(feeslike);
+
+            var rain = data.daily[0].pop * 100;
+
+            var icon = data.current.weather[0].icon;
+            var iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
             // Update HTML elements accordingly
             $('#city').text(storedCity);
@@ -213,10 +213,13 @@ if (navigator.geolocation){
             $('#weather-description').text(capitalized);
             $('#windspeed').html('<i class="fa-solid fa-wind"></i>' + 'Windspeed: ' + windspeed + ' km/h');
             $('#humidity').html('<i class="fa-solid fa-droplet"></i>' + 'Humidity: ' + humidity + '%');
+            $('#uvindex').html('<i class="fa-solid fa-indent"></i>' + 'UV Index: ' + uvindex);
+            $('#feelsLike').html('<i class="fa-regular fa-face-smile"></i>' + 'Feels Like: ' + feeslike + '°C');
+            $('#rain').html('<i class="fa-solid fa-cloud-rain"></i>' + 'Rainfall: ' + rain + '%');
 
             // Check current local time -> display either sunrise/sunset time.
             var currentTime = new Date();
-            if (currentTime.getHours() < sunset.getHours()) {
+            if (currentTime.getHours() >= sunrise.getHours() && currentTime.getHours() < sunset.getHours()) {
                 $('#sunrise').html('<i class="fa-solid fa-moon"></i>' + 'Sunset: ' + sunset.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
             } else {
                 $('#sunrise').html('<i class="fa-solid fa-sun"></i>' + 'Sunrise: ' + sunrise.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/\s(AM|PM)$/, ""));
@@ -229,30 +232,30 @@ if (navigator.geolocation){
             document.getElementById('main-container').appendChild(weatherIcon);
         })
 
-        // Get city's current local time using Google Maps Timezone API
-        // Unix timestamp for the current time
+        // Given Unix, latitude and longitude to retrieve timezone ID
         const timestamp = Math.round((new Date()).getTime() / 1000);
         const timeUrl = `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lon}&timestamp=${timestamp}&key=${googleAPI}`;
-
+        
         // Make API request
         fetch(timeUrl)
         .then(response => response.json())
         .then(data => {
-            // Get the time offset from the API response
-            const offset = data.rawOffset + data.dstOffset;
+            var timezoneId = data.timeZoneId;
+            var date = new Date();
 
-            // Calculate local time
-            const localTime = new Date(timestamp * 1000 + offset * 1000);
-            const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            // Extract the weekday, month, and day
+            // Example final format: Fri Jan 14
+            var weekdayOptions = {timeZone: timezoneId, weekday: 'short'};
+            var weekday = new Intl.DateTimeFormat('en-US', weekdayOptions).format(date);
 
-            // Extract the weekday, month, day, current time and timezone information
-            // Example final format: Fri Jan 14 12:11 Pacific Standard Time
-            const weekday = weekdays[localTime.getDay()];
-            const date = monthNames[localTime.getMonth()] + ' ' + localTime.getDate();
+            var monthOptions = {timeZone: timezoneId, month: 'short'};
+            var month = new Intl.DateTimeFormat('en-US', monthOptions).format(date);
+
+            var dayOptions = {timeZone: timezoneId, day: '2-digit'};
+            var day = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
 
             // Add the above data to HTML
-            $('#timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + date)
+            $('#timestamp').html('<i class="fa-solid fa-calendar-days"></i>' + weekday + ' ' + month + ' ' + day);
         })
     })
 } else {
