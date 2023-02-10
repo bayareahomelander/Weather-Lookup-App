@@ -20,6 +20,7 @@ Features to add:
 - Side menu to store cities currently present on the page
 - (...)
 
+****(Update 2023-02-10: Redesigned the logic which determines whether to display sunrise/sunset time; fixed the bug where date may be mistakenly displayed - the website may occasionally show date that is a few hours ahead/behind; added UV index, feels-like temperature, and precipitation module.****
 
 ****(Update 2023-01-28: Reconsturcted HTML and JS, current city displayed on the page will now be replaced instead of adding a new section underneath.)****
 
