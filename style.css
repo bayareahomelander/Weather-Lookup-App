@@ -59,19 +59,33 @@ body{
     z-index: 999;
     box-shadow: 0 5px 8px #000;
     transition: 0.5s;
+    overflow: auto;
 }
 
 .side-menu ul{
+    padding: 0;
     margin-top: 100px;
 }
 
 .side-menu li{
+    width: 88%;
+    padding: 15px;
+    display: block;
     cursor: pointer;
     font-size: 15px;
-    margin: 10px;
-    width: 80%;
-    border-bottom: 1px solid #000;
+    margin-top: 5px;
     list-style-type: none;
+    float: left;
+    border-radius: 5px;
+}
+
+.delete-button{
+    cursor: pointer;
+    border: none;
+    background: none;
+    vertical-align: top;
+    margin-left: 75px;
+    float: right;
 }
 
 .show{
@@ -175,6 +189,14 @@ body{
 #uvindex{
     width: 318px;
     height: 150px;
+    position: relative;
+}
+
+#uvbar{
+    position: absolute;
+    width: 0%;
+    height: 20px;
+    background-color: red;
 }
 
 #feelsLike, #rain{
@@ -184,10 +206,6 @@ body{
 
 #weather-container > div i{
     margin-bottom: -50px;
-}
-
-#weather-container, #main-container{
-    animation: fadeIn 1s ease-in-out forwards;
 }
 
 @media (prefers-color-scheme: dark){
@@ -208,7 +226,7 @@ body{
         color: #e9e5df;
     }
 
-    #search-button{
+    #search-button, .delete-button{
         color: #e9e5df;
     }
 
@@ -223,6 +241,5 @@ body{
 
     .side-menu li{
         color: #e9e5df;
-        border-bottom: 1px solid #e9e5df;
     }
 }
