@@ -15,13 +15,13 @@ This weather lookup project is built using JavaScript, HTML + CSS and JS librari
 - Precipitation
 - (...)
 
-****Update 2023-02-12: Added side menu, along with the feature that adds city to the side menu when one has searched for a city. Side menu allows deletion of cities, or switching between city pages by clicking city names in the menu.****
+****Update 2023-02-12:**** Added side menu; cities are automatically added to the menu when submit search request; added feature that supports removal of cities; one can switch between cities and view the weather by clicking on the name.
 
-****Update 2023-02-10:**** Redesigned the logic that determines whether to display sunrise/sunset time; fixed the bug where date may be mistakenly displayed - the website may occasionally show date that is a few hours ahead/behind; added UV index, feels-like temperature, and precipitation module.
+****Update 2023-02-10:**** Redesigned the logic that determines whether to display sunrise/sunset time; fixed the bug where date may be mistakenly displayed - the website may occasionally show date that is ahead/behind by a random number of hours; added UV index, feels-like temperature, and precipitation module.
 
 ****Update 2023-01-28:**** Reconsturcted HTML and JS, current city displayed on the page will now be replaced instead of adding a new section underneath when search for a new city.
 
-****Update 2023-01-16:**** Reconstructed code, now the Sunrise section automatically switches between sunrise/sunset based on selected city's current local time; fixed the bug where it only shows city time in PST, even not in the west coast.
+****Update 2023-01-16:**** Reconstructed code, now the Sunrise section automatically switches between sunrise/sunset based on selected city's current local time; fixed the bug where it only shows time in PST regardless of geolocation.
 
 ![screenshot 1](https://user-images.githubusercontent.com/110600178/218397355-22389ddd-e10f-40a5-9b68-a2ac08b713f9.jpeg)
 1. Initial page of website. Website asks for user permission to retrieve location information and displays weather data in separate modules.
