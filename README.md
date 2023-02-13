@@ -5,7 +5,7 @@ This weather lookup project is built using JavaScript, HTML + CSS and JS librari
 - City name
 - Current temperature
 - Weather description
-- Icon
+- Weather icon
 - Wind speed
 - Humidity
 - Sunrise/Sunset time 
