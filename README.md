@@ -32,6 +32,7 @@ Features to add:
 1. Initial page of website. Website asks for user permission to retrieve location information and displays weather data in separate modules.
 
 ![screeshot 2](https://user-images.githubusercontent.com/110600178/218397632-d37a75e2-f7d3-4cec-965f-02e4ac9eb932.jpeg)
+
 2. Search bar when input detected.
 
 ![screeshot 3](https://user-images.githubusercontent.com/110600178/218397753-616b8753-2f80-4c5a-ae61-778c5ac45ebf.jpeg)
