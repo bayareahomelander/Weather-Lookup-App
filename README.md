@@ -36,4 +36,4 @@ Features to add:
 2. Search bar when input detected.
 
 ![screeshot 3](https://user-images.githubusercontent.com/110600178/218397753-616b8753-2f80-4c5a-ae61-778c5ac45ebf.jpeg)
-3. Side menu with history stored.
+3. Side menu with history stored. City name on top is current city (e.g. Vancouver), which cannot be removed from the menu.
