@@ -15,7 +15,7 @@ This weather lookup project is built using JavaScript, HTML + CSS and JS librari
 - Precipitation
 - (...)
 
-****Update 2023-02-12:**** Added side menu; cities are automatically added to the menu when submit search request; added feature that supports removal of cities; one can switch between cities and view the weather by clicking on the name.
+****Update 2023-02-12:**** Added side menu and menu operations (addition, removal); switch between cities and view the weather by clicking on city name.
 
 ****Update 2023-02-10:**** Redesigned the logic that determines whether to display sunrise/sunset time; fixed the bug where date may be mistakenly displayed - the website may occasionally show date that is ahead/behind by a random number of hours; added UV index, feels-like temperature, and precipitation module.
 
